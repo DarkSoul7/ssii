@@ -41,6 +41,25 @@ def hash_files(path, excluded_files):
     return hashes
 
 
+def check_files(newHashes, storedHashes):
+    newHashes = [newHashes[i].split(',') for i in range(0, len(newHashes))]
+    storedHashes = [storedHashes[i].split(',') for i in range(0, len(storedHashes))]
+    dicNew = {newHash[0]: newHash[1].strip() for newHash in newHashes}
+    dicStored = {storedHash[0]: storedHash[1].strip() for storedHash in storedHashes}
+    
+    if len(dicNew.keys()) != len(dicStored.keys()):
+        print(r'El numero de archivos actual no coincide con el de la base de datos. Si ha actualizado el directorio, actualice la base de datos, por favor');
+    else:
+        bool = True
+        for key in dicNew.keys():
+            if dicNew[key] != dicStored[key]:
+                print('El fichero ', key, ' ha sido modificado.')
+                bool = False
+                break
+        if bool:
+            print('Todo correcto')
+
+
 def exclude_files(files, excluded_path):
     file = open(excluded_path, 'w+')
     file.writelines('\n'.join(files))
