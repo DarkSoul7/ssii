@@ -17,8 +17,7 @@ else:
 
 
 def create_hash(message):
-    sha = hashlib.sha512(message.encode())
-    return sha.hexdigest()
+    return hashlib.sha512(message.encode()).hexdigest()
 
     
 def scan_files(path, excluded_files):
@@ -93,5 +92,3 @@ def exclude_path(path, excluded_path):
     file = open(excluded_path, 'w+')
     file.writelines(path)
     file.close()
-    
-new_directory('C:\\Users\\aleja\\Desktop\\Universidad\\Ingeniería del Software\\4Cuarto\\Complementos de Bases de Datos (CBD)')

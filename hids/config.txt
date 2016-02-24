@@ -1,2 +1,3 @@
 files,C:\Users\aleja\git\ssii\hids\files\directories
 nextDir,dir3
+time,60

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import tkinter
-from functions.main import check_hashes
-from functions.main import init_hashes
-from functions.auxiliary import new_directory
+import functions.main as m
+import functions.auxiliary as a
 
 configuracion = {'cursor': 'hand2', 'font': 'Helvetica 10 bold', 'bg': 'white'}
-
+#Temporalidad
 def menu():
     global configuracion
     
@@ -16,18 +15,22 @@ def menu():
     frame_menu = tkinter.Frame(root, bg = 'white', name='frame_menu')
     frame_menu.pack()
     
-    button_init = tkinter.Button(frame_menu, text='Update directories', command=init_hashes)
+    button_init = tkinter.Button(frame_menu, text='Update directories', command=m.init_hashes)
     button_init.config(configuracion)
     button_init.pack(side=tkinter.LEFT)
      
-    button_check = tkinter.Button(frame_menu, text='Check integrity', command=check_hashes)
+    button_check = tkinter.Button(frame_menu, text='Check integrity', command=m.check_hashes)
     button_check.config(configuracion)
     button_check.pack(side=tkinter.LEFT)
     
-    button_new_directory = tkinter.Button(frame_menu, text='New directory', command=lambda: new_directory())
+    button_new_directory = tkinter.Button(frame_menu, text='New directory', command=lambda: create_directory())
     button_new_directory.config(configuracion)
     button_new_directory.pack(side=tkinter.LEFT)
     
     root.mainloop()
+   
     
-menu()
+def create_directory(widget=''):
+    top = tkinter.Toplevel()
+    text = tkinter.Text(top)
+    text.pack()

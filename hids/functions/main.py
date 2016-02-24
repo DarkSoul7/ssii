@@ -3,8 +3,7 @@ import pathlib
 import os.path
 from os.path import abspath
 from os.path import dirname
-from functions.auxiliary import hash_files
-from functions.auxiliary import check_files
+import functions.auxiliary as a
 
 def init_hashes():
     dirs_path = dirname(dirname(abspath(__file__)))
@@ -17,7 +16,7 @@ def init_hashes():
                 excluded_files = excluded.readlines()
             with open(str(d) + '\\dir.txt', 'r') as search:
                 files_path = search.readline()
-            hashes = hash_files(files_path, excluded_files)
+            hashes = a.hash_files(files_path, excluded_files)
             with open(str(d) + '\\hashes.txt', 'w+') as hashes_file:
                 hashes_file.writelines('\n'.join(hashes))
                 
@@ -32,9 +31,6 @@ def check_hashes():
                 excluded_files = excluded.readlines()
             with open(str(d) + '\\dir.txt', 'r') as search:
                 files_path = search.readline()
-            hashes = hash_files(files_path, excluded_files)
+            hashes = a.hash_files(files_path, excluded_files)
             with open(str(d) + '\\hashes.txt', 'r') as hashes_file:
-                check_files(hashes, list(hashes_file))
-                
-    
-check_hashes()
+                a.check_files(hashes, list(hashes_file))
