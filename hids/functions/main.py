@@ -1,4 +1,4 @@
-#encode: utf-8
+# -*- coding: utf-8 -*-
 import pathlib
 import os.path
 from os.path import abspath
@@ -9,7 +9,7 @@ from functions.auxiliary import check_files
 def init_hashes():
     dirs_path = dirname(dirname(abspath(__file__)))
     with open(dirs_path + '\\config.txt', 'r') as config:
-        dirs_path = config.readline().split(',')[1]
+        dirs_path = config.readline().split(',')[1].strip()
     folders = pathlib.Path(dirs_path)
     for d in folders.iterdir():
         if os.path.isdir(str(d)):
@@ -24,7 +24,7 @@ def init_hashes():
 def check_hashes():
     dirs_path = dirname(dirname(abspath(__file__)))
     with open(dirs_path + '\\config.txt', 'r') as config:
-        dirs_path = config.readline().split(',')[1]
+        dirs_path = config.readline().split(',')[1].strip()
     folders = pathlib.Path(dirs_path)
     for d in folders.iterdir():
         if os.path.isdir(str(d)):

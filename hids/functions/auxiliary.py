@@ -1,7 +1,8 @@
-#encode: utf-8
+# -*- coding: utf-8 -*-
 import hashlib
 import pathlib
 import os.path
+import re
 from os.path import abspath
 from os.path import dirname
 
@@ -50,14 +51,36 @@ def check_files(newHashes, storedHashes):
     if len(dicNew.keys()) != len(dicStored.keys()):
         print(r'El numero de archivos actual no coincide con el de la base de datos. Si ha actualizado el directorio, actualice la base de datos, por favor');
     else:
-        bool = True
+        correct = True
         for key in dicNew.keys():
             if dicNew[key] != dicStored[key]:
                 print('El fichero ', key, ' ha sido modificado.')
-                bool = False
+                correct = False
                 break
-        if bool:
+        if correct:
             print('Todo correcto')
+            
+            
+def new_directory(path, dir_name=''):
+    if not dir_name:
+        dirs_path = dirname(dirname(abspath(__file__)))
+        with open(dirs_path + '\\config.txt', 'r') as config:
+            lines = config.readlines()
+            dir_name = lines[1].split(',')[1].strip()
+            lines[1] = 'nextDir,dir' + str(int(" ".join(re.findall("[0-9]+", dir_name)))+1)
+            out = open(dirs_path + '\\config.txt', 'w')
+            out.writelines(lines)
+            out.close()
+    
+    new_dir_path = dirs_path + '\\files\\directories\\' + dir_name  
+    os.makedirs(new_dir_path)
+    with open(str(new_dir_path) + '\\dir.txt', 'w+') as d:
+        d.writelines(path)
+    excluded = open(str(new_dir_path) + '\\excluded.txt', 'w+')
+    excluded.close()
+    with open(str(new_dir_path) + '\\hashes.txt', 'w+') as hashes_file:
+        hashes = hash_files(path, '')
+        hashes_file.writelines('\n'.join(hashes))
 
 
 def exclude_files(files, excluded_path):
@@ -70,3 +93,5 @@ def exclude_path(path, excluded_path):
     file = open(excluded_path, 'w+')
     file.writelines(path)
     file.close()
+    
+new_directory('C:\\Users\\aleja\\Desktop\\Universidad\\Ingeniería del Software\\4Cuarto\\Complementos de Bases de Datos (CBD)')
