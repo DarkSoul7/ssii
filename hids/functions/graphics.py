@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import tkinter
 import tkinter.messagebox
 import functions.main as m
 import functions.auxiliary as a
 
 configuracion = {'cursor': 'hand2', 'font': 'Helvetica 10 bold', 'bg': 'white'}
-#Temporalidad
+
+
 def menu():
     global configuracion
     
@@ -28,11 +28,19 @@ def menu():
     button_new_directory.config(configuracion)
     button_new_directory.pack(side=tkinter.LEFT)
     
+    button_update_time = tkinter.Button(frame_menu, text='Update timer', command=lambda: change_time())
+    button_update_time.config(configuracion)
+    button_update_time.pack(side=tkinter.LEFT)
+    
+    button_get_directories = tkinter.Button(frame_menu, text='Stored directories', command=lambda: get_directories())
+    button_get_directories.config(configuracion)
+    button_get_directories.pack(side=tkinter.LEFT)
+    
     root.mainloop()
    
     
 def create_directory(widget=''):
-    top = tkinter.Toplevel()
+    top = tkinter.Toplevel(bg = 'white')
     
     def callback():
         path = entry.get()
@@ -50,3 +58,45 @@ def create_directory(widget=''):
     
     button = tkinter.Button(top, text = 'Store', cursor = 'hand2', command = callback)
     button.pack(side = tkinter.LEFT)
+    
+
+def change_time():
+    top = tkinter.Toplevel(bg = 'white')
+    
+    def callback():
+        time = entry.get()
+        res = a.update_time(time)
+        if res:
+            tkinter.messagebox.showinfo('Integrity checker', 'Timer was successfully updated')
+        else:
+            tkinter.messagebox.showerror('Integrity checker', 'Unable to update the timer')
+    
+    label = tkinter.Label(top, text = 'Insert new time')
+    label.pack(side = tkinter.LEFT)
+        
+    entry = tkinter.Entry(top, width=60)
+    entry.pack(side = tkinter.LEFT)
+    
+    button = tkinter.Button(top, text = 'Update', cursor = 'hand2', command = callback)
+    button.pack(side = tkinter.LEFT)
+    
+    
+def get_directories():
+    top = tkinter.Toplevel(bg = 'white')
+    
+    scrollbar = tkinter.Scrollbar(top)
+    scrollbar.pack(side = tkinter.RIGHT, fill=tkinter.Y)
+    
+    text = tkinter.Text(top, height = 30, width = 120,  yscrollcommand = scrollbar.set)
+    text.pack(side = tkinter.LEFT)
+    
+    directories = a.get_directories()
+    
+    for d in directories:
+        text.insert(tkinter.END, 'Name: ' + d[0])
+        text.insert(tkinter.END, '\n')
+        text.insert(tkinter.END, 'Path: ' + d[1])
+        text.insert(tkinter.END, '\n\n')
+
+        
+menu()

@@ -88,6 +88,33 @@ def new_directory(path, dir_name=''):
     return res
 
 
+def update_time(time):
+    res = True
+    try:
+        dirs_path = dirname(dirname(abspath(__file__)))
+        with open(dirs_path + '\\config.txt', 'r') as config:
+            lines = config.readlines()
+            lines[2] = 'time,' + time + '\n'
+            out = open(dirs_path + '\\config.txt', 'w')
+            out.writelines(lines)
+            out.close()
+    except:
+        res = False
+    
+    return res
+
+
+def get_directories():
+    res = []
+    dirs_path = dirname(dirname(abspath(__file__))) + '\\files\\directories'
+    directories = pathlib.Path(dirs_path)
+    dirs = directories.iterdir()
+    for d in dirs:
+        with open(str(d) + '\\dir.txt', 'r') as file:
+            res.append((str(d).split('\\')[-1], file.readline()))
+    return res
+
+
 def exclude_files(files, excluded_path):
     file = open(excluded_path, 'w+')
     file.writelines('\n'.join(files))
