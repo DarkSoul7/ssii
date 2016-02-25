@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import tkinter
+import tkinter.messagebox
 import functions.main as m
 import functions.auxiliary as a
 
@@ -32,5 +33,20 @@ def menu():
     
 def create_directory(widget=''):
     top = tkinter.Toplevel()
-    text = tkinter.Text(top)
-    text.pack()
+    
+    def callback():
+        path = entry.get()
+        res = a.new_directory(path)
+        if res:
+            tkinter.messagebox.showinfo('Integrity checker', 'The new directory was successfully stored')
+        else:
+            tkinter.messagebox.showerror('Integrity checker', 'Unable to store the new directory')
+    
+    label = tkinter.Label(top, text = 'Insert new directory')
+    label.pack(side = tkinter.LEFT)
+        
+    entry = tkinter.Entry(top, width=60)
+    entry.pack(side = tkinter.LEFT)
+    
+    button = tkinter.Button(top, text = 'Store', cursor = 'hand2', command = callback)
+    button.pack(side = tkinter.LEFT)

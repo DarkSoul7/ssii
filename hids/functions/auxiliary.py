@@ -61,25 +61,32 @@ def check_files(newHashes, storedHashes):
             
             
 def new_directory(path, dir_name=''):
-    if not dir_name:
-        dirs_path = dirname(dirname(abspath(__file__)))
-        with open(dirs_path + '\\config.txt', 'r') as config:
-            lines = config.readlines()
-            dir_name = lines[1].split(',')[1].strip()
-            lines[1] = 'nextDir,dir' + str(int(" ".join(re.findall("[0-9]+", dir_name)))+1)
-            out = open(dirs_path + '\\config.txt', 'w')
-            out.writelines(lines)
-            out.close()
+    res = True
+    try:
+        if not dir_name:
+            dirs_path = dirname(dirname(abspath(__file__)))
+            with open(dirs_path + '\\config.txt', 'r') as config:
+                lines = config.readlines()
+                dir_name = lines[1].split(',')[1].strip()
+                lines[1] = 'nextDir,dir' + str(int(" ".join(re.findall("[0-9]+", dir_name)))+1) + '\n'
+                print(lines)
+                out = open(dirs_path + '\\config.txt', 'w')
+                out.writelines(lines)
+                out.close()
+        
+        new_dir_path = dirs_path + '\\files\\directories\\' + dir_name  
+        os.makedirs(new_dir_path)
+        with open(str(new_dir_path) + '\\dir.txt', 'w+') as d:
+            d.writelines(path)
+        excluded = open(str(new_dir_path) + '\\excluded.txt', 'w+')
+        excluded.close()
+        with open(str(new_dir_path) + '\\hashes.txt', 'w+') as hashes_file:
+            hashes = hash_files(path, '')
+            hashes_file.writelines('\n'.join(hashes))
+    except:
+        res = False
     
-    new_dir_path = dirs_path + '\\files\\directories\\' + dir_name  
-    os.makedirs(new_dir_path)
-    with open(str(new_dir_path) + '\\dir.txt', 'w+') as d:
-        d.writelines(path)
-    excluded = open(str(new_dir_path) + '\\excluded.txt', 'w+')
-    excluded.close()
-    with open(str(new_dir_path) + '\\hashes.txt', 'w+') as hashes_file:
-        hashes = hash_files(path, '')
-        hashes_file.writelines('\n'.join(hashes))
+    return res
 
 
 def exclude_files(files, excluded_path):
