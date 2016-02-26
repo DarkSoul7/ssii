@@ -16,8 +16,10 @@ else:
     file_excluded = files_dir + '/files/excluded.txt'
 
 
-def create_hash(message):
-    return hashlib.sha512(message.encode()).hexdigest()
+def create_hash(path):
+    with open(path, 'r') as message:
+        h = hashlib.sha512(str(message).encode()).hexdigest()
+    return h
 
     
 def scan_files(path, excluded_files):
@@ -26,10 +28,8 @@ def scan_files(path, excluded_files):
     
     for d in directory.iterdir():
         d  = str(d)
-        if d not in excluded_files:
-            if os.path.isdir(str(d)):
-                files.extend(scan_files(d, excluded_files))
-            else:
+        if os.path.isfile(d):
+            if d not in excluded_files:
                 files.append(d)
     
     return files
@@ -37,7 +37,7 @@ def scan_files(path, excluded_files):
 
 def hash_files(path, excluded_files):
     dirs = scan_files(path, excluded_files)
-    hashes = [d + ',' + create_hash(str(d)) for d in dirs]
+    hashes = [str(d).split('\\')[-1].strip() + ',' + create_hash(str(d)) for d in dirs]
     return hashes
 
 
@@ -111,7 +111,7 @@ def get_directories():
     dirs = directories.iterdir()
     for d in dirs:
         with open(str(d) + '\\dir.txt', 'r') as file:
-            res.append((str(d).split('\\')[-1], file.readline()))
+            res.append((str(d).split('\\')[-1].strip(), file.readline().strip()))
     return res
 
 

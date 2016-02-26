@@ -80,23 +80,27 @@ def change_time():
     button = tkinter.Button(top, text = 'Update', cursor = 'hand2', command = callback)
     button.pack(side = tkinter.LEFT)
     
-    
+# Los frames se centran, corregir    
 def get_directories():
+    global configuracion
     top = tkinter.Toplevel(bg = 'white')
-    
-    scrollbar = tkinter.Scrollbar(top)
-    scrollbar.pack(side = tkinter.RIGHT, fill=tkinter.Y)
-    
-    text = tkinter.Text(top, height = 30, width = 120,  yscrollcommand = scrollbar.set)
-    text.pack(side = tkinter.LEFT)
     
     directories = a.get_directories()
     
     for d in directories:
-        text.insert(tkinter.END, 'Name: ' + d[0])
-        text.insert(tkinter.END, '\n')
-        text.insert(tkinter.END, 'Path: ' + d[1])
-        text.insert(tkinter.END, '\n\n')
+        frame = tkinter.Frame(top, bg='white')
+        frame.pack(side=tkinter.TOP, anchor=tkinter.W)
+        label = tkinter.Label(frame, text=d[0] + ': ' + d[1], bg='white')
+        label.pack(side=tkinter.LEFT, anchor=tkinter.W)
+        button_update = tkinter.Button(frame, text='Update hashes', command='')
+        button_update.config(configuracion)
+        button_update.pack(side=tkinter.LEFT)
+        button_delete = tkinter.Button(frame, text='Delete directory', command='')
+        button_delete.config(configuracion)
+        button_delete.pack(side=tkinter.LEFT)
+        button_excluded = tkinter.Button(frame, text='View excluded files', command='')
+        button_excluded.config(configuracion)
+        button_excluded.pack(side=tkinter.LEFT)
 
         
 menu()
