@@ -6,7 +6,7 @@ import shutil
 import webbrowser
 from os.path import abspath
 from os.path import dirname
-import functions.auxiliary as a
+import hids.functions.auxiliary as a
 
 def update_all_directories():
     dirs_path = dirname(dirname(abspath(__file__)))

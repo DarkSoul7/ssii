@@ -1,5 +1,5 @@
-files,C:\Users\aleja\git\ssii\hids\files\directories
-logs,C:\Users\aleja\git\ssii\hids\files\logs
+files,C:\Users\aleja\PycharmProjects\SSII\ssii\hids\files\directories
+logs,C:\Users\aleja\PycharmProjects\SSII\ssii\hids\files\logs
 nlogs,30
 threshold,100
 nextDir,dir3

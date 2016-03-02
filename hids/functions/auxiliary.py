@@ -5,7 +5,7 @@ import os.path
 import re
 from os.path import abspath
 from os.path import dirname
-from functions import scheduler
+from hids.functions import scheduler
 
 
 def create_hash(path):
@@ -13,17 +13,17 @@ def create_hash(path):
         h = hashlib.sha512(str(message).encode()).hexdigest()
     return h
 
-    
+
 def scan_files(path, excluded_files):
     directory = pathlib.Path(path)
     files = []
-    
+
     for d in directory.iterdir():
         d  = str(d)
         if os.path.isfile(d):
             if d not in excluded_files:
                 files.append(d)
-    
+
     return files
 
 
@@ -31,7 +31,7 @@ def hash_files(path, excluded_files):
     dirs = scan_files(path, excluded_files)
     hashes = [str(d) + ',' + create_hash(str(d)) for d in dirs]
     return hashes
-            
+
 
 def check_files(newHashes, storedHashes, logs_file):
     analysed_files = 0
@@ -40,11 +40,11 @@ def check_files(newHashes, storedHashes, logs_file):
     storedHashes = [storedHashes[i].split(',') for i in range(0, len(storedHashes))]
     dicNew = {newHash[0]: newHash[1].strip() for newHash in newHashes}
     dicStored = {storedHash[0]: storedHash[1].strip() for storedHash in storedHashes}
-    
+
     with open(logs_file, 'a+') as log:
         if len(dicNew.keys()) != len(dicStored.keys()):
             log.write('[ERROR] The number of stored files does not match the current number of files in this directory\n')
-        
+
         if len(dicNew.keys()) > len(dicStored.keys()):
             for key in dicNew.keys():
                 if key not in dicStored.keys():
@@ -53,7 +53,7 @@ def check_files(newHashes, storedHashes, logs_file):
                 elif dicNew[key] != dicStored[key]:
                     log.write('[ERROR] "' + key + '" has been modified\n')
                     failed_files += 1
-                
+
                 analysed_files += 1
         else:
             for key in dicStored.keys():
@@ -63,14 +63,14 @@ def check_files(newHashes, storedHashes, logs_file):
                 elif dicNew[key] != dicStored[key]:
                     log.write('[ERROR] "' + key + '" has been modified\n')
                     failed_files += 1
-                
+
                 analysed_files += 1
-        
+
         log.write('Directory checked\n')
-    
+
     return (analysed_files, failed_files)
-            
-            
+
+
 def new_directory(path, dir_name=''):
     res = True
     try:
@@ -78,13 +78,13 @@ def new_directory(path, dir_name=''):
             dirs_path = dirname(dirname(abspath(__file__)))
             with open(dirs_path + '\\config.txt', 'r') as config:
                 lines = config.readlines()
-                dir_name = lines[3].split(',')[1].strip()
+                dir_name = lines[4].split(',')[1].strip()
                 lines[4] = 'nextDir,dir' + str(int(" ".join(re.findall("[0-9]+", dir_name)))+1) + '\n'
                 out = open(dirs_path + '\\config.txt', 'w')
                 out.writelines(lines)
                 out.close()
-        
-        new_dir_path = dirs_path + '\\files\\directories\\' + dir_name  
+
+        new_dir_path = dirs_path + '\\files\\directories\\' + dir_name
         os.makedirs(new_dir_path)
         with open(str(new_dir_path) + '\\dir.txt', 'w+') as d:
             d.writelines(path)

@@ -1,49 +1,49 @@
-# -*- coding: utf-8 -*-
+# -*- CODING: UTF-8 -*-
 import tkinter.messagebox
-import functions.main as m
-import functions.auxiliary as a
+import hids.functions.main as m
+import hids.functions.auxiliary as a
 
 configuracion = {'cursor': 'hand2', 'font': 'Helvetica 10 bold', 'bg': 'white'}
 
 
 def menu():
     global configuracion
-    
+
     root = tkinter.Tk('root')
     root.config(bg = 'white')
-    root.title('Integrity checker')
-    
+    root.title('integrity checker')
+
     frame_menu = tkinter.Frame(root, bg = 'white', name='frame_menu')
     frame_menu.pack()
-    
+
     button_init = tkinter.Button(frame_menu, text='Update all directories', command=lambda:m.update_all_directories())
     button_init.config(configuracion)
     button_init.pack(side=tkinter.LEFT)
-     
+
     button_check = tkinter.Button(frame_menu, text='Check integrity', command=lambda:m.check_hashes())
     button_check.config(configuracion)
     button_check.pack(side=tkinter.LEFT)
-    
+
     button_new_directory = tkinter.Button(frame_menu, text='New directory', command=lambda: create_directory())
     button_new_directory.config(configuracion)
     button_new_directory.pack(side=tkinter.LEFT)
-    
+
     button_update_time = tkinter.Button(frame_menu, text='Update timer', command=lambda: change_time())
     button_update_time.config(configuracion)
     button_update_time.pack(side=tkinter.LEFT)
-    
+
     button_update_time = tkinter.Button(frame_menu, text='Update number of logs', command=lambda: change_nlogs())
     button_update_time.config(configuracion)
     button_update_time.pack(side=tkinter.LEFT)
-    
+
     button_update_threshold = tkinter.Button(frame_menu, text='Update threshold', command=lambda: change_threshold())
     button_update_threshold.config(configuracion)
     button_update_threshold.pack(side=tkinter.LEFT)
-    
+
     button_get_directories = tkinter.Button(frame_menu, text='Stored directories', command=lambda: get_directories())
     button_get_directories.config(configuracion)
     button_get_directories.pack(side=tkinter.LEFT)
-    
+
     button_get_config = tkinter.Button(frame_menu, text='Configuration file', command=lambda: view_config_file())
     button_get_config.config(configuracion)
     button_get_config.pack(side=tkinter.LEFT)
