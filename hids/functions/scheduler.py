@@ -11,7 +11,7 @@ def schedule(interval):
     computer_userdomain = ""
     computer_password = ""
     action_id = "Integrity checker"
-    action_workdir = dirname(abspath(__file__)) #working directory for action executable
+    action_workdir = dirname(dirname(abspath(__file__))) #working directory for action executable
     action_path = action_workdir + r"\executable.exe" #executable path (could be python.exe)
     action_arguments = r'' #arguments (could be something.py)
     author = "" #so that end users know who you are

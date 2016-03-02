@@ -51,6 +51,14 @@ def view_files(d):
     return stored_files
 
 
+def view_config_file():
+    dirs_path = dirname(dirname(abspath(__file__)))
+    with open(dirs_path + '\\config.txt', 'r') as config:
+        config_file = config.readlines()
+    
+    return config_file
+
+
 def manage_excluded(d):
     dirs_path = dirname(dirname(abspath(__file__)))
     with open(dirs_path + '\\config.txt', 'r') as config:
@@ -70,7 +78,9 @@ def check_hashes():
     
     logs = list(pathlib.Path(logs_path).iterdir()) 
     if len(logs) >= nlogs:
-        os.remove(str(logs[0]).replace('\\', '\\\\'))
+        while len(logs) >= nlogs:
+            os.remove(str(logs[0]).replace('\\', '\\\\'))
+            logs.remove(logs[0])
     
     if len(logs) > 0:
         previous_log = str(logs[-1]).replace('\\', '\\\\')
@@ -108,11 +118,15 @@ def check_hashes():
         log.write('Daily Integrity Conformity Ratio: ' + str(ratio) + '\n')
         
         if previous_log:
-            with open(previous_log) as previous_log_file:
-                previous_log = previous_log_file.readlines()
-                previous_log = float(previous_log[-3].split(':')[1][:-2])
-            log.write('Previous Integrity Conformity Ratio: ' + str(previous_log) + '\n')
-            log.write('Trend: ' + 'POSITIVE' if ratio >= previous_log else 'NEGATIVE')
+            try:
+                with open(previous_log) as previous_log_file:
+                    previous_log = previous_log_file.readlines()
+                    previous_log = float(previous_log[-3].split(':')[1][:-2])
+                log.write('Previous Integrity Conformity Ratio: ' + str(previous_log) + '\n')
+                log.write('Trend: ' + 'POSITIVE' if ratio >= previous_log else 'NEGATIVE')
+            except:
+                log.write('Previous Integrity Conformity Ratio: -\n')
+                log.write('Trend: ' + 'POSITIVE')
         else:
             log.write('Previous Integrity Conformity Ratio: -\n')
             log.write('Trend: ' + 'POSITIVE')

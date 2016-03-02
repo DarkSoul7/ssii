@@ -44,6 +44,10 @@ def menu():
     button_get_directories.config(configuracion)
     button_get_directories.pack(side=tkinter.LEFT)
     
+    button_get_config = tkinter.Button(frame_menu, text='Configuration file', command=lambda: view_config_file())
+    button_get_config.config(configuracion)
+    button_get_config.pack(side=tkinter.LEFT)
+    
     root.mainloop()
    
     
@@ -140,32 +144,36 @@ def get_directories():
     
     directories = a.get_directories()
     
-    for d in directories:
-        frame = tkinter.Frame(top, bg='white')
-        frame.pack(side=tkinter.TOP, anchor=tkinter.W)
-        
-        label = tkinter.Label(frame, text=d[0] + ': ' + d[1], bg='white')
+    if not directories:
+        label = tkinter.Label(top, text='There is no stored directories to show', bg='white')
         label.pack(side=tkinter.LEFT, anchor=tkinter.W)
-        
-        button_update = tkinter.Button(frame, text='Update hashes', command=lambda d=d[0] : m.update_directory(d))
-        button_update.config(configuracion)
-        button_update.pack(side=tkinter.LEFT)
-        
-        button_delete = tkinter.Button(frame, text='Delete directory', command=lambda d=d[0] : delete_directory(d, top))
-        button_delete.config(configuracion)
-        button_delete.pack(side=tkinter.LEFT)
-        
-        button_files = tkinter.Button(frame, text='View stored files', command=lambda d=d : view_files(d))
-        button_files.config(configuracion)
-        button_files.pack(side=tkinter.LEFT)
-        
-        button_excluded = tkinter.Button(frame, text='View excluded files', command=lambda d=d : view_excluded(d))
-        button_excluded.config(configuracion)
-        button_excluded.pack(side=tkinter.LEFT)
-        
-        button_manage = tkinter.Button(frame, text='Manage excluded files', command=lambda d=d[0] : m.manage_excluded(d))
-        button_manage.config(configuracion)
-        button_manage.pack(side=tkinter.LEFT)
+    else:
+        for d in directories:
+            frame = tkinter.Frame(top, bg='white')
+            frame.pack(side=tkinter.TOP, anchor=tkinter.W)
+            
+            label = tkinter.Label(frame, text=d[0] + ': ' + d[1], bg='white')
+            label.pack(side=tkinter.LEFT, anchor=tkinter.W)
+            
+            button_update = tkinter.Button(frame, text='Update hashes', command=lambda d=d[0] : m.update_directory(d))
+            button_update.config(configuracion)
+            button_update.pack(side=tkinter.LEFT)
+            
+            button_delete = tkinter.Button(frame, text='Delete directory', command=lambda d=d[0] : delete_directory(d, top))
+            button_delete.config(configuracion)
+            button_delete.pack(side=tkinter.LEFT)
+            
+            button_files = tkinter.Button(frame, text='View stored files', command=lambda d=d : view_files(d))
+            button_files.config(configuracion)
+            button_files.pack(side=tkinter.LEFT)
+            
+            button_excluded = tkinter.Button(frame, text='View excluded files', command=lambda d=d : view_excluded(d))
+            button_excluded.config(configuracion)
+            button_excluded.pack(side=tkinter.LEFT)
+            
+            button_manage = tkinter.Button(frame, text='Manage excluded files', command=lambda d=d[0] : m.manage_excluded(d))
+            button_manage.config(configuracion)
+            button_manage.pack(side=tkinter.LEFT)
         
         
 def delete_directory(d, top):
@@ -207,5 +215,20 @@ def view_files(d):
     text.config(state='disabled')
     text.pack()
         
+
+def view_config_file():
+    config_file = m.view_config_file()
+    
+    top = tkinter.Toplevel(bg = 'white')
+    
+    text = tkinter.Text(top, width=120)
+    text.insert('end', 'Configuration file' + '\n\n')
+    
+    for config in config_file:
+        line = config.split(',')
+        text.insert('end', line[0].strip() + ': ' + line[1].strip() + '\n')
+    
+    text.config(state='disabled')
+    text.pack()
         
 menu()

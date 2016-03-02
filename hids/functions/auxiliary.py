@@ -162,11 +162,17 @@ def update_threshold(threshold):
 
 
 def get_directories():
-    res = []
-    dirs_path = dirname(dirname(abspath(__file__))) + '\\files\\directories'
-    directories = pathlib.Path(dirs_path)
-    dirs = directories.iterdir()
-    for d in dirs:
-        with open(str(d) + '\\dir.txt', 'r') as file:
-            res.append((str(d).split('\\')[-1].strip(), file.readline().strip()))
+    try:
+        res = []
+        config_path = dirname(dirname(abspath(__file__))) + '\\config.txt'
+        with open(config_path) as config:
+            dirs_path = config.readline().split(',')[1].strip()
+        directories = pathlib.Path(dirs_path)
+        dirs = directories.iterdir()
+        for d in dirs:
+            with open(str(d) + '\\dir.txt', 'r') as file:
+                res.append((str(d).split('\\')[-1].strip(), file.readline().strip()))
+    except:
+        res = None
+        
     return res
