@@ -1,3 +1,5 @@
 files,C:\Users\aleja\git\ssii\hids\files\directories
+logs,C:\Users\aleja\git\ssii\hids\files\logs
+nlogs,30
 nextDir,dir3
-time,60
+time,1440

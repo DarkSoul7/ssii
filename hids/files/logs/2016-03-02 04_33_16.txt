@@ -1,0 +1,7 @@
+Checking started
+System's current date is 2016-03-02 04:33:16
+Checking "C:\Users\aleja\Desktop\HIDS\Seguridad en Sistemas Informáticos y en Internet (SSII)"
+[ERROR] "C:\Users\aleja\Desktop\HIDS\Seguridad en Sistemas Informáticos y en Internet (SSII)\Proyecto 1.pdf" has been modified
+Directory checked
+Checking "C:\Users\aleja\Desktop\HIDS\Complementos de Bases de Datos (CBD)"
+Directory checked
