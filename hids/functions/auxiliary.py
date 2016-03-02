@@ -78,7 +78,7 @@ def new_directory(path, dir_name=''):
             dirs_path = dirname(dirname(abspath(__file__)))
             with open(dirs_path + '\\config.txt', 'r') as config:
                 lines = config.readlines()
-                dir_name = lines[3].split(',')[1].strip()
+                dir_name = lines[4].split(',')[1].strip()
                 lines[4] = 'nextDir,dir' + str(int(" ".join(re.findall("[0-9]+", dir_name)))+1) + '\n'
                 out = open(dirs_path + '\\config.txt', 'w')
                 out.writelines(lines)
