@@ -41,6 +41,16 @@ def view_excluded(d):
     return excluded_files
 
 
+def view_files(d):
+    dirs_path = dirname(dirname(abspath(__file__)))
+    with open(dirs_path + '\\config.txt', 'r') as config:
+        dirs_path = config.readline().split(',')[1].strip()
+    with open(str(dirs_path) + '\\' + d + '\\dir.txt') as directory:
+        stored_files = list(pathlib.Path(directory.readline()).iterdir())
+    
+    return stored_files
+
+
 def manage_excluded(d):
     dirs_path = dirname(dirname(abspath(__file__)))
     with open(dirs_path + '\\config.txt', 'r') as config:
@@ -48,6 +58,9 @@ def manage_excluded(d):
     webbrowser.open(dirs_path + '\\' + d + '\\excluded.txt')
                 
 def check_hashes():
+    analysed_files = 0
+    failed_files = 0
+    previous_log = None
     dirs_path = dirname(dirname(abspath(__file__)))
     
     with open(dirs_path + '\\config.txt', 'r') as config:
@@ -57,8 +70,10 @@ def check_hashes():
     
     logs = list(pathlib.Path(logs_path).iterdir()) 
     if len(logs) >= nlogs:
-        logs = logs[0]
-        os.remove(str(logs).replace('\\', '\\\\'))
+        os.remove(str(logs[0]).replace('\\', '\\\\'))
+    
+    if len(logs) > 0:
+        previous_log = str(logs[-1]).replace('\\', '\\\\')
     
     logs_path += '\\' + str(datetime.datetime.today()).split('.')[0].replace(':', '_') + '.txt'
     
@@ -81,4 +96,23 @@ def check_hashes():
             with open(str(d) + '\\hashes.txt', 'r') as hashes_file:
                 with open(logs_path, 'a+') as log:
                     log.write('Checking "' + files_path + '"\n')
-                a.check_files(hashes, list(hashes_file), logs_path)
+                (analysed, failed) = a.check_files(hashes, list(hashes_file), logs_path)
+                analysed_files += analysed
+                failed_files += failed
+    
+    with open(logs_path, 'a+') as log:
+        log.write('Analysed files: ' + str(analysed_files) + '\n')
+        log.write('Failed files: ' + str(failed_files) + '\n')
+        succes_files = analysed_files - failed_files
+        ratio = succes_files*1.0/analysed_files
+        log.write('Daily Integrity Conformity Ratio: ' + str(ratio) + '\n')
+        
+        if previous_log:
+            with open(previous_log) as previous_log_file:
+                previous_log = previous_log_file.readlines()
+                previous_log = float(previous_log[-3].split(':')[1][:-2])
+            log.write('Previous Integrity Conformity Ratio: ' + str(previous_log) + '\n')
+            log.write('Trend: ' + 'POSITIVE' if ratio >= previous_log else 'NEGATIVE')
+        else:
+            log.write('Previous Integrity Conformity Ratio: -\n')
+            log.write('Trend: ' + 'POSITIVE')

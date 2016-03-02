@@ -1,8 +1,13 @@
 Checking started
-System's current date is 2016-03-02 04:32:32
+System's current date is 2016-03-02 05:52:15
 Checking "C:\Users\aleja\Desktop\HIDS\Seguridad en Sistemas Informáticos y en Internet (SSII)"
 [ERROR] The number of stored files does not match the current number of files in this directory
 [ERROR] "C:\Users\aleja\Desktop\HIDS\Seguridad en Sistemas Informáticos y en Internet (SSII)\Tema 2. Integridad de la Información.pdf" has been deleted from this directory
 Directory checked
 Checking "C:\Users\aleja\Desktop\HIDS\Complementos de Bases de Datos (CBD)"
 Directory checked
+Analysed files: 14
+Failed files: 1
+Daily Integrity Conformity Ratio: 0.9285714285714286
+Previous Integrity Conformity Ratio: 0.928571428571428
+Trend: POSITIVE

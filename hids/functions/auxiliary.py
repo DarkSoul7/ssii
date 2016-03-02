@@ -33,6 +33,8 @@ def hash_files(path, excluded_files):
             
 
 def check_files(newHashes, storedHashes, logs_file):
+    analysed_files = 0
+    failed_files = 0
     newHashes = [newHashes[i].split(',') for i in range(0, len(newHashes))]
     storedHashes = [storedHashes[i].split(',') for i in range(0, len(storedHashes))]
     dicNew = {newHash[0]: newHash[1].strip() for newHash in newHashes}
@@ -46,16 +48,26 @@ def check_files(newHashes, storedHashes, logs_file):
             for key in dicNew.keys():
                 if key not in dicStored.keys():
                     log.write('[ERROR] "' + key + '" has been added to this directory and is not under version control\n')
+                    failed_files += 1
                 elif dicNew[key] != dicStored[key]:
                     log.write('[ERROR] "' + key + '" has been modified\n')
+                    failed_files += 1
+                
+                analysed_files += 1
         else:
             for key in dicStored.keys():
                 if key not in dicNew.keys():
                     log.write('[ERROR] "' + key + '" has been deleted from this directory\n')
+                    failed_files += 1
                 elif dicNew[key] != dicStored[key]:
                     log.write('[ERROR] "' + key + '" has been modified\n')
+                    failed_files += 1
+                
+                analysed_files += 1
         
         log.write('Directory checked\n')
+    
+    return (analysed_files, failed_files)
             
             
 def new_directory(path, dir_name=''):
@@ -66,7 +78,7 @@ def new_directory(path, dir_name=''):
             with open(dirs_path + '\\config.txt', 'r') as config:
                 lines = config.readlines()
                 dir_name = lines[3].split(',')[1].strip()
-                lines[3] = 'nextDir,dir' + str(int(" ".join(re.findall("[0-9]+", dir_name)))+1) + '\n'
+                lines[4] = 'nextDir,dir' + str(int(" ".join(re.findall("[0-9]+", dir_name)))+1) + '\n'
                 out = open(dirs_path + '\\config.txt', 'w')
                 out.writelines(lines)
                 out.close()
@@ -103,7 +115,7 @@ def update_time(time):
         dirs_path = dirname(dirname(abspath(__file__)))
         with open(dirs_path + '\\config.txt', 'r') as config:
             lines = config.readlines()
-            lines[4] = 'time,' + time + '\n'
+            lines[5] = 'time,' + time + '\n'
             out = open(dirs_path + '\\config.txt', 'w')
             out.writelines(lines)
             out.close()
@@ -120,6 +132,22 @@ def update_nlogs(nlogs):
         with open(dirs_path + '\\config.txt', 'r') as config:
             lines = config.readlines()
             lines[2] = 'nlogs,' + nlogs + '\n'
+            out = open(dirs_path + '\\config.txt', 'w')
+            out.writelines(lines)
+            out.close()
+    except:
+        res = False
+    
+    return res
+
+
+def update_threshold(threshold):
+    res = True
+    try:
+        dirs_path = dirname(dirname(abspath(__file__)))
+        with open(dirs_path + '\\config.txt', 'r') as config:
+            lines = config.readlines()
+            lines[3] = 'threshold,' + str(threshold) + '\n'
             out = open(dirs_path + '\\config.txt', 'w')
             out.writelines(lines)
             out.close()
