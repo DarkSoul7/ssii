@@ -3,4 +3,4 @@ logs,C:\Users\aleja\git\ssii\hids\files\logs
 nlogs,30
 threshold,100
 nextDir,dir3
-time,1440
+time,60

@@ -5,6 +5,7 @@ import os.path
 import re
 from os.path import abspath
 from os.path import dirname
+from functions import scheduler
 
 
 def create_hash(path):
@@ -119,6 +120,7 @@ def update_time(time):
             out = open(dirs_path + '\\config.txt', 'w')
             out.writelines(lines)
             out.close()
+        scheduler.schedule(time)
     except:
         res = False
     
