@@ -144,6 +144,8 @@ def update_nlogs(nlogs):
 def update_threshold(threshold):
     res = True
     try:
+        assert threshold >= 0
+        assert threshold <= 100
         dirs_path = dirname(dirname(abspath(__file__)))
         with open(dirs_path + '\\config.txt', 'r') as config:
             lines = config.readlines()
