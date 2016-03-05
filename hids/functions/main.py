@@ -2,11 +2,11 @@
 import datetime
 import os.path
 import pathlib
-import shutil
-import webbrowser
 from os.path import abspath
 from os.path import dirname
 import hids.functions.auxiliary as a
+from hids.functions import cryptography
+
 
 def update_all_directories():
     dirs_path = dirname(dirname(abspath(__file__)))
@@ -14,7 +14,7 @@ def update_all_directories():
         dirs_path = config.readline().split(',')[1].strip()
     folders = pathlib.Path(dirs_path)
     for d in folders.iterdir():
-        a.update_hashes(d)
+        a.update_hashes(str(d).encode(encoding='utf-8'))
         
         
 def update_directory(d):
@@ -22,33 +22,26 @@ def update_directory(d):
     with open(dirs_path + '\\config.txt', 'r') as config:
         dirs_path = config.readline().split(',')[1].strip()
     a.update_hashes(str(dirs_path) + '\\' + d)
-    
-    
-def delete_directory(d):    
-    dirs_path = dirname(dirname(abspath(__file__)))
-    with open(dirs_path + '\\config.txt', 'r') as config:
-        dirs_path = config.readline().split(',')[1].strip()
-    shutil.rmtree(str(dirs_path) + '\\' + d, ignore_errors=True)
 
 
 def view_excluded(d):
     dirs_path = dirname(dirname(abspath(__file__)))
     with open(dirs_path + '\\config.txt', 'r') as config:
         dirs_path = config.readline().split(',')[1].strip()
-    with open(str(dirs_path) + '\\' + d + '\\excluded.txt') as excluded:
-        excluded_files = excluded.readlines()
-    
-    return excluded_files
+    excluded_files = cryptography.decrypt_file(str(dirs_path) + '\\' + d + '\\excluded.txt')
+
+    return excluded_files.split('\n') if excluded_files else None
 
 
 def view_files(d):
     dirs_path = dirname(dirname(abspath(__file__)))
     with open(dirs_path + '\\config.txt', 'r') as config:
         dirs_path = config.readline().split(',')[1].strip()
-    with open(str(dirs_path) + '\\' + d + '\\dir.txt') as directory:
-        stored_files = list(pathlib.Path(directory.readline()).iterdir())
+    hashes = cryptography.decrypt_file(str(dirs_path) + '\\' + d + '\\hashes.txt')
+    hashes = hashes.split('\n')
+    stored_files = [file.split(',')[0].split('\\')[-1] for file in hashes]
     
-    return stored_files
+    return stored_files if stored_files[0] else None
 
 
 def view_config_file():
@@ -59,12 +52,20 @@ def view_config_file():
     return config_file
 
 
-def manage_excluded(d):
-    dirs_path = dirname(dirname(abspath(__file__)))
-    with open(dirs_path + '\\config.txt', 'r') as config:
-        dirs_path = config.readline().split(',')[1].strip()
-    webbrowser.open(dirs_path + '\\' + d + '\\excluded.txt')
-                
+def manage_excluded(d, excluded):
+    res = True
+
+    try:
+        dirs_path = dirname(dirname(abspath(__file__)))
+        with open(dirs_path + '\\config.txt', 'r') as config:
+            dirs_path = config.readline().split(',')[1].strip()
+        cryptography.encrypt_file(excluded, dirs_path + '\\' + d + '\\excluded.txt')
+    except:
+        res = False
+
+    return res
+
+
 def check_hashes():
     analysed_files = 0
     failed_files = 0
@@ -87,7 +88,7 @@ def check_hashes():
     
     logs_path += '\\' + str(datetime.datetime.today()).split('.')[0].replace(':', '_') + '.txt'
     
-    with open(logs_path, 'w+') as log:
+    with open(logs_path, mode='w+', encoding='utf-8') as log:
         log.write('Checking started\n')
         log.write("System's current date is " + str(datetime.datetime.today()).split('.')[0] + '\n')
     
@@ -95,26 +96,23 @@ def check_hashes():
     
     for d in folders.iterdir():
         if os.path.isdir(str(d)):
-            with open(str(d) + '\\excluded.txt', 'r') as excluded:
-                excluded_files = excluded.readlines()
-            
-            with open(str(d) + '\\dir.txt', 'r') as search:
-                files_path = search.readline()
-            
+            excluded_files = cryptography.decrypt_file(str(d) + '\\excluded.txt').split('\n')
+            files_path = cryptography.decrypt_file(str(d) + '\\dir.txt')
+
             hashes = a.hash_files(files_path, excluded_files)
-            
-            with open(str(d) + '\\hashes.txt', 'r') as hashes_file:
-                with open(logs_path, 'a+') as log:
-                    log.write('Checking "' + files_path + '"\n')
-                (analysed, failed) = a.check_files(hashes, list(hashes_file), logs_path)
-                analysed_files += analysed
-                failed_files += failed
+            hashes_file = cryptography.decrypt_file(str(d) + '\\hashes.txt').split('\n')
+
+            with open(logs_path, mode='a+', encoding='utf-8') as log:
+                log.write('Checking "' + files_path + '"\n')
+            (analysed, failed) = a.check_files(hashes, list(hashes_file), logs_path)
+            analysed_files += analysed
+            failed_files += failed
     
-    with open(logs_path, 'a+') as log:
+    with open(logs_path, mode='a+', encoding='utf-8') as log:
         log.write('Analysed files: ' + str(analysed_files) + '\n')
         log.write('Failed files: ' + str(failed_files) + '\n')
-        succes_files = analysed_files - failed_files
-        ratio = succes_files*1.0/analysed_files
+        success_files = analysed_files - failed_files
+        ratio = success_files*1.0/analysed_files
         log.write('Daily Integrity Conformity Ratio: ' + str(ratio) + '\n')
         
         if previous_log:

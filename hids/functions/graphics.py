@@ -3,11 +3,12 @@ import tkinter.messagebox
 import hids.functions.main as m
 import hids.functions.auxiliary as a
 
-configuracion = {'cursor': 'hand2', 'font': 'Helvetica 10 bold', 'bg': 'white'}
+
+configuration = {'cursor': 'hand2', 'font': 'Helvetica 10 bold', 'bg': 'white'}
 
 
 def menu():
-    global configuracion
+    global configuration
 
     root = tkinter.Tk('root')
     root.config(bg = 'white')
@@ -17,35 +18,35 @@ def menu():
     frame_menu.pack()
 
     button_init = tkinter.Button(frame_menu, text='Update all directories', command=lambda:m.update_all_directories())
-    button_init.config(configuracion)
+    button_init.config(configuration)
     button_init.pack(side=tkinter.LEFT)
 
     button_check = tkinter.Button(frame_menu, text='Check integrity', command=lambda:m.check_hashes())
-    button_check.config(configuracion)
+    button_check.config(configuration)
     button_check.pack(side=tkinter.LEFT)
 
     button_new_directory = tkinter.Button(frame_menu, text='New directory', command=lambda: create_directory())
-    button_new_directory.config(configuracion)
+    button_new_directory.config(configuration)
     button_new_directory.pack(side=tkinter.LEFT)
 
     button_update_time = tkinter.Button(frame_menu, text='Update timer', command=lambda: change_time())
-    button_update_time.config(configuracion)
+    button_update_time.config(configuration)
     button_update_time.pack(side=tkinter.LEFT)
 
     button_update_time = tkinter.Button(frame_menu, text='Update number of logs', command=lambda: change_nlogs())
-    button_update_time.config(configuracion)
+    button_update_time.config(configuration)
     button_update_time.pack(side=tkinter.LEFT)
 
     button_update_threshold = tkinter.Button(frame_menu, text='Update threshold', command=lambda: change_threshold())
-    button_update_threshold.config(configuracion)
+    button_update_threshold.config(configuration)
     button_update_threshold.pack(side=tkinter.LEFT)
 
     button_get_directories = tkinter.Button(frame_menu, text='Stored directories', command=lambda: get_directories())
-    button_get_directories.config(configuracion)
+    button_get_directories.config(configuration)
     button_get_directories.pack(side=tkinter.LEFT)
 
     button_get_config = tkinter.Button(frame_menu, text='Configuration file', command=lambda: view_config_file())
-    button_get_config.config(configuracion)
+    button_get_config.config(configuration)
     button_get_config.pack(side=tkinter.LEFT)
     
     root.mainloop()
@@ -139,68 +140,84 @@ def change_threshold():
     
 
 def get_directories():
-    global configuracion
+    global configuration
     top = tkinter.Toplevel(bg = 'white')
     
     directories = a.get_directories()
     
     if not directories:
-        label = tkinter.Label(top, text='There is no stored directories to show', bg='white')
+        label = tkinter.Label(top, text='There are no stored directories to show', bg='white')
         label.pack(side=tkinter.LEFT, anchor=tkinter.W)
     else:
         for d in directories:
             frame = tkinter.Frame(top, bg='white')
             frame.pack(side=tkinter.TOP, anchor=tkinter.W)
-            
+
             label = tkinter.Label(frame, text=d[0] + ': ' + d[1], bg='white')
             label.pack(side=tkinter.LEFT, anchor=tkinter.W)
             
-            button_update = tkinter.Button(frame, text='Update hashes', command=lambda d=d[0] : m.update_directory(d))
-            button_update.config(configuracion)
+            button_update = tkinter.Button(frame, text='Update hashes', command=lambda d=d[0] : update_hashes(d))
+            button_update.config(configuration)
             button_update.pack(side=tkinter.LEFT)
             
             button_delete = tkinter.Button(frame, text='Delete directory', command=lambda d=d[0] : delete_directory(d, top))
-            button_delete.config(configuracion)
+            button_delete.config(configuration)
             button_delete.pack(side=tkinter.LEFT)
             
             button_files = tkinter.Button(frame, text='View stored files', command=lambda d=d : view_files(d))
-            button_files.config(configuracion)
+            button_files.config(configuration)
             button_files.pack(side=tkinter.LEFT)
             
-            button_excluded = tkinter.Button(frame, text='View excluded files', command=lambda d=d : view_excluded(d))
-            button_excluded.config(configuracion)
+            button_excluded = tkinter.Button(frame, text='View and manage excluded files', command=lambda d=d : view_manage_excluded(d))
+            button_excluded.config(configuration)
             button_excluded.pack(side=tkinter.LEFT)
-            
-            button_manage = tkinter.Button(frame, text='Manage excluded files', command=lambda d=d[0] : m.manage_excluded(d))
-            button_manage.config(configuracion)
-            button_manage.pack(side=tkinter.LEFT)
-        
-        
+
+
+def update_hashes(d):
+    res = m.update_directory(d)
+
+    if res:
+        tkinter.messagebox.showinfo('Integrity checker', 'Successfully updated')
+    else:
+        tkinter.messagebox.showerror('Integrity checker', 'Unable to update')
+
+
 def delete_directory(d, top):
-    m.delete_directory(d)
+    a.delete_directory(d)
     
     top.destroy()
     get_directories()
     
 
-def view_excluded(d):
+def view_manage_excluded(d):
     excluded_files = m.view_excluded(d[0])
     
     top = tkinter.Toplevel(bg = 'white')
+
+    def callback():
+        excluded = text.get('3.0', 'end')
+
+        res = m.manage_excluded(d[0], excluded)
+        if res:
+            tkinter.messagebox.showinfo('Integrity checker', 'Successfully updated')
+        else:
+            tkinter.messagebox.showerror('Integrity checker', 'Unable to update')
     
     text = tkinter.Text(top, width=120)
     text.insert('end', 'Excluded files for directory: ' + d[1] + '\n\n')
-    
+
     if not excluded_files:
-        text.insert('end', 'None')
+        text.insert('end', 'There are no excluded files for this directory')
     else:
         for file in excluded_files:
             text.insert('end', file + '\n')
     
-    text.config(state='disabled')
     text.pack()
-    
-    
+
+    button = tkinter.Button(top, text = 'Update', cursor = 'hand2', command = lambda:callback())
+    button.pack(side = tkinter.LEFT)
+
+
 def view_files(d):
     stored_files = m.view_files(d[0])
     
@@ -208,9 +225,12 @@ def view_files(d):
     
     text = tkinter.Text(top, width=120)
     text.insert('end', 'Stored files for directory: ' + d[1] + '\n\n')
-    
-    for file in stored_files:
-        text.insert('end', str(file) + '\n')
+
+    if not stored_files:
+        text.insert('end', 'There are no stored files for this directory')
+    else:
+        for file in stored_files:
+            text.insert('end', str(file) + '\n')
     
     text.config(state='disabled')
     text.pack()
