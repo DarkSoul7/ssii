@@ -1,0 +1,11 @@
+Checking started
+System's current date is 2016-03-05 19:54:00
+Checking "C:\Users\aleja\Desktop\HIDS\Pruebas"
+Directory checked
+Checking "C:\Users\aleja\Desktop\HIDS\Pruebas 2"
+Directory checked
+Analysed files: 40
+Failed files: 0
+Daily Integrity Conformity Ratio: 1.0
+Previous Integrity Conformity Ratio: -
+Trend: POSITIVE

@@ -1,0 +1,13 @@
+Checking started
+System's current date is 2016-03-05 19:55:44
+Checking "C:\Users\aleja\Desktop\HIDS\Pruebas"
+[ERROR] The stored files does not match the current files in this directory
+[ERROR] "C:\Users\aleja\Desktop\HIDS\Pruebas\Archivo nuevo.txt" has been added to this directory and is not under version control
+Directory checked
+Checking "C:\Users\aleja\Desktop\HIDS\Pruebas 2"
+Directory checked
+Analysed files: 41
+Failed files: 1
+Daily Integrity Conformity Ratio: 0.975609756097561
+Previous Integrity Conformity Ratio: 0.97
+Trend: POSITIVE

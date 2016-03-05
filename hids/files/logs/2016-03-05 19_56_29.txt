@@ -1,0 +1,12 @@
+Checking started
+System's current date is 2016-03-05 19:56:29
+Checking "C:\Users\aleja\Desktop\HIDS\Pruebas"
+[ERROR] "C:\Users\aleja\Desktop\HIDS\Pruebas\Prueba.txt" has been modified
+Directory checked
+Checking "C:\Users\aleja\Desktop\HIDS\Pruebas 2"
+Directory checked
+Analysed files: 40
+Failed files: 1
+Daily Integrity Conformity Ratio: 0.975
+Previous Integrity Conformity Ratio: 0.97560975609756
+NEGATIVE

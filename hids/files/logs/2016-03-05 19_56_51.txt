@@ -1,0 +1,15 @@
+Checking started
+System's current date is 2016-03-05 19:56:51
+Checking "C:\Users\aleja\Desktop\HIDS\Pruebas"
+[ERROR] The stored files does not match the current files in this directory
+[ERROR] "C:\Users\aleja\Desktop\HIDS\Pruebas\Inicio.html" has been deleted from this directory
+[ERROR] "C:\Users\aleja\Desktop\HIDS\Pruebas\Inicio2.html" has been added to this directory and is not under version control
+[ERROR] "C:\Users\aleja\Desktop\HIDS\Pruebas\Prueba.txt" has been modified
+Directory checked
+Checking "C:\Users\aleja\Desktop\HIDS\Pruebas 2"
+Directory checked
+Analysed files: 41
+Failed files: 3
+Daily Integrity Conformity Ratio: 0.926829268292683
+Previous Integrity Conformity Ratio: 0.97
+NEGATIVE
