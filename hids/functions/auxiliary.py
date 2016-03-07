@@ -11,8 +11,8 @@ from hids.functions import cryptography
 
 
 def create_hash(path):
-    with open(path, mode='r', encoding='utf-8') as message:
-        h = hashlib.sha512(message.read().encode(encoding='utf8')).hexdigest()
+    with open(path, mode='rb') as message:
+        h = hashlib.sha512(message.read()).hexdigest()
     return h
 
 
