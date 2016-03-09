@@ -1,37 +1,27 @@
 # -*- coding: utf-8 -*-
-import socket
+import hmac
 import socketserver
-import threading
+import intrans.auxiliary as a
 
 
-def client_thread(clientsocket):
-    clientsocket.send("Welcome to the integrity server...\r\n")
-    while True:
-        data = clientsocket.recv()
-        if data:
-            clientsocket.send(data)
+class MyTCPHandler(socketserver.BaseRequestHandler):
+
+    def handle(self):
+        self.data = self.request.recv(1024).strip()
+        self.key = bytes(a.generator(), 'utf-8')
+        self.request.sendall(self.key)
+
+        self.data = str(self.request.recv(1024), 'utf-8').strip().split('\t')
+        mac = hmac.new(self.key, self.data[0].encode('utf-8'), 'sha256').digest()
+        if hmac.compare_digest(mac, bytes(self.data[1], 'latin-1')):
+            self.request.sendall(b'Message correctly received')
         else:
-            pass
+            self.request.sendall(b'There was an error during this transaction')
 
 
-def main_server_thread():
-    while 1:
-        (clientsocket, address) = socketserver.accept()
-        ct = threading(target=client_thread,args=((clientsocket),))
-        ct.start()
+if __name__ == "__main__":
+    HOST, PORT = "localhost", 9999
 
-        mainThread = threading(target=main_server_thread,args=())
-        mainThread.start()
-        while 1:
-            pass
-
-
-def main():
-    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    serversocket.bind((socket.gethostname(), 80))
-    serversocket.listen(5)
-
-    while True:
-        (clientsocket, address) = serversocket.accept()
-        ct = client_thread(clientsocket)
-        ct.start()
+    server = socketserver.TCPServer((HOST, PORT), MyTCPHandler)
+    print('Server running...')
+    server.serve_forever()
