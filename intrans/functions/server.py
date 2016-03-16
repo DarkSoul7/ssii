@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import hmac
 import socketserver
-from intrans.functions import auxiliary as a
-
 import intrans.functions.auxiliary as a
 
 
@@ -24,10 +22,16 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
             self.request.sendall(bytes(message, encoding='utf-8'))
             a.writelog(self.data[0] + '\t\t' + message, True)
 
+        extra_data = str(self.request.recv(1024), 'utf-8').strip().split('\t\t')
+        if extra_data:
+            message = 'Replay attack detected'
+            self.request.sendall(bytes(message, encoding='utf-8'))
+            a.writelog(self.data[0] + '\t\t' + message, True)
+
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 9999
 
     server = socketserver.TCPServer((HOST, PORT), MyTCPHandler)
-    print('Server running...')
+    print('Running server...')
     server.serve_forever()

@@ -18,14 +18,19 @@ def menu():
     button_transference.config(configuration)
     button_transference.pack(side=tkinter.LEFT)
 
-    button_man_in_the_middle = tkinter.Button(root, text='Simulate a Man in the middle attack', command=lambda: menu_transfer(True))
+    button_man_in_the_middle = tkinter.Button(root, text='Simulate a man in the middle attack',
+                                              command=lambda: menu_transfer(mitm=True))
     button_man_in_the_middle.config(configuration)
     button_man_in_the_middle.pack(side=tkinter.LEFT)
+
+    button_replay = tkinter.Button(root, text='Simulate a replay attack', command=lambda: menu_transfer(replay=True))
+    button_replay.config(configuration)
+    button_replay.pack(side=tkinter.LEFT)
 
     root.mainloop()
 
 
-def menu_transfer(mitm=False):
+def menu_transfer(mitm=False, replay=False):
 
     top = tkinter.Toplevel()
 
@@ -49,7 +54,7 @@ def menu_transfer(mitm=False):
             check = False
 
         if check:
-            make_transfer(origin + ' ' + destination + ' ' + quantity, algorithm, mitm)
+            make_transfer(origin + ' ' + destination + ' ' + quantity, algorithm, mitm, replay)
 
     frame_transference = tkinter.Frame(top, bg='white', name='frame_transference')
     frame_transference.pack()
@@ -116,7 +121,7 @@ def menu_transfer(mitm=False):
     button.pack(side=tkinter.BOTTOM)
 
 
-def make_transfer(transfer, algorithm, mitm):
+def make_transfer(transfer, algorithm, mitm, replay):
     host, port = 'localhost', 9999
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -133,10 +138,18 @@ def make_transfer(transfer, algorithm, mitm):
         sock.sendall(bytes(message, encoding='utf-8'))
 
         received = str(sock.recv(1024), 'utf-8')
+
+        if replay:
+            sock.sendall(bytes(message, encoding='utf-8'))
+            received2 = str(sock.recv(1024), 'utf-8')
     finally:
         sock.close()
 
-    tkinter.messagebox.showinfo('Intrans', received)
+    if replay:
+        tkinter.messagebox.showinfo('Intrans', 'First attemp: ' + received)
+        tkinter.messagebox.showinfo('Intrans', 'Second attemp: ' + (received2 if received2 else 'No response received'))
+    else:
+        tkinter.messagebox.showinfo('Intrans', received)
 
 
 menu()
