@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-import datetime
 import random
 import string
-from os.path import dirname
-from os.path import abspath
 from os.path import isfile
 
 
@@ -11,9 +8,7 @@ def generator(size=16, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.SystemRandom().choice(chars) for _ in range(size))
 
 
-def writelog(operation, error=False):
-    log_dir = dirname(dirname(abspath(__file__))) + '\\files\\logs\\' + \
-          str(datetime.datetime.today()).split(' ')[0] + '.txt'
+def writelog(log_dir, operation, error=False):
     if not isfile(log_dir):
         log = open(log_dir, mode='w+')
         log.close()

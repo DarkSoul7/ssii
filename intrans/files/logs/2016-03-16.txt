@@ -31,6 +31,29 @@ Simulating a mitm attack		Replay attack detected
 789 254 159		Replay attack detected
 123456 456789 2540		Message correctly received
 123456 456789 2540		Replay attack detected
-Total number of operations		33
-Total number of successful operations		20
-Kpi		0.6060606060606061
+123 456 200		Message correctly received
+123 456 200		Replay attack detected
+123 456 200		Message correctly received
+123 456 200		Replay attack detected
+123 456 000		Message correctly received
+123 456 000		Replay attack detected
+666 777 888		Message correctly received
+666 777 888		Replay attack detected
+123 456 222		Message correctly received
+123 456 222		Replay attack detected
+123 456 200		Message correctly received
+123 456 200		Replay attack detected
+123 456 200		Message correctly received
+123 456 200		Replay attack detected
+123 456 200		Message correctly received
+123 456 200		Replay attack detected
+123 456 888		Message correctly received
+123 456 888		Replay attack detected
+123 456 999		Message correctly received
+123 456 222		Message correctly received
+123 456 888		Message correctly received
+123 456 888		Replay attack detected
+Simulating a mitm attack		There was an error during this transaction
+Total number of operations		56
+Total number of successful operations		32
+Kpi		0.5714285714285714

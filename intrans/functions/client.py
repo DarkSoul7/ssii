@@ -150,3 +150,5 @@ def make_transfer(transfer, algorithm, mitm, replay):
         tkinter.messagebox.showinfo('Intrans', 'Second attemp: ' + (received2 if received2 else 'No response received'))
     else:
         tkinter.messagebox.showinfo('Intrans', received)
+
+menu()
