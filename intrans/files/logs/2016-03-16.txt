@@ -29,6 +29,8 @@ Simulating a mitm attack		Replay attack detected
 789 254 159		Replay attack detected
 789 254 159		Message correctly received
 789 254 159		Replay attack detected
-Total number of operations		31
-Total number of successful operations		19
-Kpi		0.6129032258064516
+123456 456789 2540		Message correctly received
+123456 456789 2540		Replay attack detected
+Total number of operations		33
+Total number of successful operations		20
+Kpi		0.6060606060606061

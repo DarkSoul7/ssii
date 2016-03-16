@@ -27,11 +27,3 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
             message = 'Replay attack detected'
             self.request.sendall(bytes(message, encoding='utf-8'))
             a.writelog(self.data[0] + '\t\t' + message, True)
-
-
-if __name__ == "__main__":
-    HOST, PORT = "localhost", 9999
-
-    server = socketserver.TCPServer((HOST, PORT), MyTCPHandler)
-    print('Running server...')
-    server.serve_forever()
