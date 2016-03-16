@@ -1,0 +1,8 @@
+123 456 200		Message correctly received
+789 658 250		Message correctly received
+123 456 200		Message correctly received
+123 456 200		Message correctly received
+Simulating a mitm attack		There was an error during this transaction
+Total number of operations		5
+Total number of successful operations		4
+Kpi		0.8
