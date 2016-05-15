@@ -2,7 +2,7 @@
 import datetime
 import hmac
 import socketserver
-import auxiliary as a
+import functions.auxiliary as a
 from os.path import dirname
 from os.path import abspath
 
